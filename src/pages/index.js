@@ -1,9 +1,8 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
-import axios from "axios";
+import { retornaUfs } from "./servicos/ufs.js";
 
-const endpoint = 'https://www.devmedia.com.br/projetos-api/ufs';
-const listaUfs = (await axios.get(endpoint)).data;
+const listaUfs = await retornaUfs();
 
 export default function Home() {
   return (
@@ -28,13 +27,19 @@ export default function Home() {
           </thead>
           <tbody>
           {
-            listaUfs.map((dadosUF, index) => (
-              <tr key={index}>
-                <td>{dadosUF.id}</td>
-                <td>{dadosUF.uf}</td>
-                <td>{dadosUF.nome}</td>
-              </tr>
-            ))
+            Array.isArray(listaUfs) ?
+              listaUfs.map((dadosUF, index) => (
+                <tr key={index}>
+                  <td>{dadosUF.id}</td>
+                  <td>{dadosUF.uf}</td>
+                  <td>{dadosUF.nome}</td>
+                </tr>
+              ))
+            :
+            <tr>
+              <td colSpan="3">Erro ao carregar dados</td>
+            </tr>
+
           }
           </tbody>
          </table>
